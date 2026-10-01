@@ -10,18 +10,11 @@ runs:
     - name: 🍺 Install Maestro
       shell: bash
       run: |
-        # The installer doesn't propagate download failures (a CDN 504 once left this step
-        # green with no binary installed), so verify the install and retry on failure.
-        for attempt in 1 2 3; do
-          if curl -Ls "https://get.maestro.mobile.dev" | MAESTRO_VERSION="${{ inputs.version }}" bash && "$HOME/.maestro/bin/maestro" --version; then
-            break
-          fi
-          if [ "$attempt" = 3 ]; then
-            echo "Maestro install failed after 3 attempts"
-            exit 1
-          fi
-          echo "Maestro install failed (attempt $attempt of 3); retrying..."
-          rm -rf "$HOME/.maestro"
-          sleep 10
-        done
+        # maestro-runner instead of Maestro: same flows, same command line.
+        # It is installed under ~/.maestro/bin as `maestro`, where the e2e
+        # scripts call it. The version input (Maestro's) is not used.
+        curl -fsSL https://open.devicelab.dev/install/maestro-runner | bash -s -- --version 1.1.28.1
+        mkdir -p "$HOME/.maestro/bin"
+        ln -sf "$HOME/.maestro-runner/bin/maestro-runner" "$HOME/.maestro/bin/maestro"
+        "$HOME/.maestro/bin/maestro" --version
         echo "${HOME}/.maestro/bin" >> $GITHUB_PATH
