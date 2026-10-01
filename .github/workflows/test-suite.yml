@@ -308,6 +308,8 @@ jobs:
         working-directory: apps/bare-expo
         env:
           MAESTRO_CLI_NO_ANALYTICS: 1
+          # maestro-runner 1.1.28.1 needs the platform with --device <simulator>
+          MAESTRO_PLATFORM: ios
         timeout-minutes: 40
       - name: 📦 Prepare testing artifacts
         if: always()
@@ -322,6 +324,7 @@ jobs:
           name: bare-expo-artifacts-ios
           path: |
             ~/maestroArtifacts/tests/**/*
+            apps/bare-expo/e2e/reports/**/*
             ~/Library/Logs/maestro/**/*
           overwrite: true
       - name: 🔗 Artifacts download URL
@@ -499,6 +502,8 @@ jobs:
             fuser -k 7123/tcp 2>/dev/null || true
             mkdir -p ~/.maestro/tests
             LOG=~/.maestro/tests/screenshot-server-logs-$(date +%s); ./e2e/image-comparison/src/server.ts > "$LOG" 2>&1 & echo $! > /tmp/image-server.pid; sleep 2; kill -0 $(cat /tmp/image-server.pid) 2>/dev/null || { echo "Image comparison server failed to start. Logs:"; cat "$LOG"; exit 1; }
+            # maestro-runner bench: keep the device log for diagnosis
+            adb logcat -b main,system,crash -v threadtime > ~/.maestro/tests/logcat.txt 2>&1 &
             # Run the actual tests
             ./scripts/start-android-e2e-test.ts --test
           working-directory: ./apps/bare-expo
@@ -515,6 +520,7 @@ jobs:
           name: bare-expo-artifacts-android
           path: |
             ~/maestroArtifacts/tests/**/*
+            apps/bare-expo/e2e/reports/**/*
           overwrite: true
       - name: 🔗 Artifacts download URL
         if: always()
