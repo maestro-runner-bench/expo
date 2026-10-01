@@ -46,10 +46,10 @@ jobs:
   detect-platform-changes:
     runs-on: ubuntu-24.04
     outputs:
-      should_build_ios: ${{ steps.build.outputs.should_run_ios }}
-      should_build_android: ${{ steps.build.outputs.should_run_android }}
-      should_test_ios: ${{ steps.e2e.outputs.should_run_ios }}
-      should_test_android: ${{ steps.e2e.outputs.should_run_android }}
+      should_build_ios: 'true' # maestro-runner bench: always run
+      should_build_android: 'true' # maestro-runner bench: always run
+      should_test_ios: 'true' # maestro-runner bench: always run
+      should_test_android: 'true' # maestro-runner bench: always run
     steps:
       - name: 👀 Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
