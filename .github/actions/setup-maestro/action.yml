@@ -13,7 +13,7 @@ runs:
         # maestro-runner instead of Maestro: same flows, same command line.
         # It is installed under ~/.maestro/bin as `maestro`, where the e2e
         # scripts call it. The version input (Maestro's) is not used.
-        curl -fsSL https://open.devicelab.dev/install/maestro-runner | bash -s -- --version 1.1.28.1
+        curl -fsSL https://open.devicelab.dev/install/maestro-runner | bash -s -- --version 1.1.28.2
         mkdir -p "$HOME/.maestro/bin"
         ln -sf "$HOME/.maestro-runner/bin/maestro-runner" "$HOME/.maestro/bin/maestro"
         "$HOME/.maestro/bin/maestro" --version
